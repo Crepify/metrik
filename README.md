@@ -33,6 +33,9 @@ The prototype is designed as **decision support**, not an automated final enforc
 | **Mobile camera capture** | Uses the device camera capture input on supported mobile browsers. |
 | **Drag and drop** | Quick label upload from a desktop workflow. |
 | **E-commerce listing mode** | Paste product-listing text without scraping a website. |
+| **Phone-to-PC QR transfer** | The desktop creates a temporary QR code; a phone can scan it, capture a label photo and send it directly back to the open desktop workspace. |
+| **Mobile camera-first uploader** | The QR landing page uses the phone camera capture input and also supports gallery selection. |
+| **Automatic desktop handoff** | The desktop polls the temporary session and loads the received image into the standard OCR / analysis flow automatically. |
 | **Synthetic demos** | Built-in declaration-rich, non-compliant, imported-product and multipack examples for a reliable SIH demo. |
 
 ### 2. OCR and declaration extraction
@@ -85,6 +88,8 @@ The prototype is designed as **decision support**, not an automated final enforc
 ### 6. Trust, privacy and governance safeguards
 
 - **No live product-page scraping** — listing mode accepts user-pasted text only.
+- **Temporary phone transfer** — QR sessions expire after 15 minutes; image files are held only in the server's temporary directory for the active session.
+- **Same-origin handoff** — the QR page and desktop workspace communicate through the same metrikAI server, without a third-party file-sharing service.
 - **Synthetic demo labels** — the built-in demos do not use real brands or product data.
 - **Rule-profile mindset** — the UI makes context, rule references and review conditions visible.
 - **Human authorisation** — a final legal interpretation or enforcement action is never made by the prototype alone.
@@ -135,7 +140,7 @@ Package image / Camera / Listing text
 
 ```bash
 cd legal-metrology-prototype
-python3 -m http.server 4173 --bind 0.0.0.0
+python3 server.py
 ```
 
 Open:
@@ -154,10 +159,13 @@ For mobile testing, open the same address from the preview environment or host t
 .
 ├── README.md
 ├── legal-metrology-prototype/
-│   ├── index.html                # Working prototype
+│   ├── index.html                # Desktop inspection workspace
+│   ├── phone.html                # QR-linked, mobile camera uploader
+│   ├── server.py                 # Same-origin temporary transfer API
 │   ├── assets/
 │   │   ├── demo-compliant.svg
-│   │   └── demo-violation.svg
+│   │   ├── demo-violation.svg
+│   │   └── vendor/qrcode.js      # Local QR generator
 │   ├── README.md
 │   └── serve.sh
 └── presentation/

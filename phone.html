@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>metrikAI — Send label photo</title>
+  <style>
+    :root{--ink:#10213b;--muted:#6a7890;--line:#dce6f1;--blue:#2865df;--teal:#0c9a88;--danger:#cb4651;--canvas:#f3f7fc;--nav:#0d1b2f}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(circle at 95% 0,#dfeeff 0,transparent 28%),var(--canvas);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .page{max-width:530px;margin:auto;padding:24px 18px 42px}.brand{display:flex;gap:10px;align-items:center;color:#fff;background:linear-gradient(145deg,#10284a,#194f91);padding:13px 15px;border-radius:17px;box-shadow:0 12px 27px rgba(26,65,117,.2)}.mark{width:34px;height:34px;border-radius:11px;background:#41d0b8;display:grid;place-items:center;color:#123154;font-size:19px;font-weight:900}.brand b{font-size:17px;letter-spacing:-.3px}.brand span{display:block;font-size:10px;letter-spacing:.85px;color:#c5dcf7;font-weight:750;margin-top:2px}
+    .card{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:19px;padding:20px;box-shadow:0 14px 32px rgba(32,56,89,.08)}h1{font-size:23px;line-height:1.15;letter-spacing:-.6px;margin:0 0 8px}p{margin:0;color:var(--muted);font-size:13px;line-height:1.52}.session{display:flex;gap:8px;align-items:flex-start;margin-top:16px;padding:10px 11px;border-radius:10px;background:#eef8f6;color:#267a70;font-size:11px;line-height:1.38}.dot{height:8px;width:8px;background:#10a286;border-radius:50%;margin-top:3px;box-shadow:0 0 0 4px #d7f5ed}.drop{margin:19px 0 13px;min-height:214px;border:1.5px dashed #a9bdd9;border-radius:15px;background:#f8fbff;overflow:hidden;position:relative;display:grid;place-items:center;text-align:center}.drop.ready{border-style:solid;border-color:#7cc8b8;background:#f5fffc}.drop-inner{padding:21px}.camera{display:grid;place-items:center;width:55px;height:55px;margin:0 auto 10px;border-radius:17px;background:#e8f1ff;color:#3973dd;font-size:27px}.drop b{font-size:14px;display:block}.drop small{display:block;color:var(--muted);font-size:11px;margin:7px auto 0;max-width:280px;line-height:1.45}.pick{border:0;margin-top:14px;background:transparent;color:var(--blue);font-weight:800;font-size:13px}.preview{display:none;width:100%;height:245px;position:relative}.preview.show{display:block}.preview img{width:100%;height:100%;object-fit:contain;background:#eaf0f7}.change{position:absolute;right:9px;top:9px;background:rgba(255,255,255,.93);color:#49617e;border:1px solid #dce6f1;border-radius:8px;padding:6px 8px;font-size:11px;font-weight:800}.file-info{display:none;padding:8px 10px;border-radius:8px;background:#eff7ff;color:#477195;font-size:11px;line-height:1.35}.file-info.show{display:block}.button{height:47px;width:100%;border:0;border-radius:12px;color:#fff;background:linear-gradient(120deg,#2865df,#3577f4);font-weight:850;font-size:14px;box-shadow:0 10px 18px rgba(44,103,221,.22)}.button:disabled{opacity:.55;box-shadow:none}.link{display:block;margin-top:15px;text-align:center;color:#56708e;font-size:11px;line-height:1.45}.notice{display:none;margin-top:16px;border-radius:12px;padding:13px;font-size:12px;line-height:1.48}.notice.success{display:block;background:#e9fbf5;color:#08785f;border:1px solid #b9eedf}.notice.error{display:block;background:#fff1f2;color:#b93e49;border:1px solid #fecdd3}.foot{margin-top:20px;text-align:center;color:#8090a5;font-size:10px;line-height:1.5}.hidden{display:none!important}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="brand"><div class="mark">✓</div><div><b>metrikAI</b><span>PHONE LABEL TRANSFER</span></div></div>
+    <section class="card">
+      <h1>Send a package-label photo to your computer</h1>
+      <p>Take a clear, front-facing image of the declaration panel, or choose an existing image from your gallery.</p>
+      <div class="session"><span class="dot"></span><span id="sessionStatus">Checking your secure transfer session…</span></div>
+      <div class="drop" id="dropZone" role="button" tabindex="0" aria-label="Take or select a label photo">
+        <div class="drop-inner" id="emptyState"><div class="camera">⌑</div><b>Take label photo</b><small>Good lighting, minimal glare and all declarations in view give the best extraction results.</small><button class="pick" id="chooseBtn" type="button">Open camera or photo gallery</button></div>
+        <div class="preview" id="preview"><img id="previewImage" alt="Selected label preview" /><button class="change" id="changeBtn" type="button">Change</button></div>
+        <input class="hidden" id="fileInput" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" />
+      </div>
+      <div class="file-info" id="fileInfo"></div>
+      <button class="button" id="sendBtn" disabled>Send label to computer</button>
+      <div class="notice" id="notice"></div>
+      <span class="link">After sending, return to the metrikAI screen on your computer. The photo will appear there automatically.</span>
+    </section>
+    <div class="foot">Temporary transfer sessions expire after 15 minutes. The label photo is only held for the active transfer session.</div>
+  </main>
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const params = new URLSearchParams(location.search);
+  const sessionId = params.get('session');
+  let selectedFile = null;
+  let sessionValid = false;
+
+  function message(kind, text) {
+    const el=$('#notice'); el.className='notice '+kind; el.textContent=text;
+  }
+  function setSession(text, valid) {
+    $('#sessionStatus').textContent=text;
+    sessionValid=Boolean(valid);
+    $('#sendBtn').disabled=!(selectedFile && sessionValid);
+  }
+  function bytes(n){return n<1024*1024?`${Math.ceil(n/1024)} KB`:`${(n/(1024*1024)).toFixed(1)} MB`;}
+  function showFile(file){
+    if(!file || !/^image\/(jpeg|png|webp)$/.test(file.type)) { message('error','Please choose a JPEG, PNG or WEBP image.'); return; }
+    if(file.size>12*1024*1024) { message('error','Choose a label image smaller than 12 MB.'); return; }
+    selectedFile=file;
+    const reader=new FileReader(); reader.onload=e=>$('#previewImage').src=e.target.result; reader.readAsDataURL(file);
+    $('#emptyState').classList.add('hidden'); $('#preview').classList.add('show'); $('#dropZone').classList.add('ready');
+    $('#fileInfo').textContent=`Ready: ${file.name} • ${bytes(file.size)}`; $('#fileInfo').classList.add('show');
+    $('#sendBtn').disabled=!sessionValid; $('#notice').className='notice';
+  }
+  async function checkSession(){
+    if(!sessionId){ setSession('This transfer link is incomplete. Scan the QR code on your computer again.',false); message('error','No transfer session was found in this link.'); return; }
+    try{
+      const response=await fetch(`/api/sessions/${encodeURIComponent(sessionId)}`,{cache:'no-store'});
+      const data=await response.json();
+      if(!response.ok) throw new Error(data.error||'This transfer session is no longer available.');
+      const mins=Math.max(1,Math.ceil(data.expires_in/60));
+      setSession(data.ready?`An image was already sent. You may replace it before the session expires.`:`Secure transfer active • expires in about ${mins} minute${mins===1?'':'s'}.`,true);
+    }catch(error){setSession(error.message||'Transfer session unavailable.',false);message('error',error.message||'This transfer session has expired. Scan a new QR code on your computer.');}
+  }
+  async function upload(){
+    if(!selectedFile||!sessionValid) return;
+    $('#sendBtn').disabled=true; $('#sendBtn').textContent='Sending label photo…'; $('#notice').className='notice';
+    const fd=new FormData(); fd.append('file',selectedFile,selectedFile.name);
+    try{
+      const response=await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/upload`,{method:'POST',body:fd});
+      const data=await response.json();
+      if(!response.ok) throw new Error(data.error||'Could not send this label photo.');
+      message('success','Photo sent successfully. Return to your computer — metrikAI will load it automatically.');
+      $('#sendBtn').textContent='Photo sent ✓';
+      setSession('Upload complete. You can return to the desktop workspace now.',true);
+    }catch(error){message('error',error.message||'Upload failed. Please try again.');$('#sendBtn').textContent='Send label to computer';$('#sendBtn').disabled=false;}
+  }
+  $('#chooseBtn').addEventListener('click',e=>{e.stopPropagation();$('#fileInput').click();});
+  $('#changeBtn').addEventListener('click',e=>{e.stopPropagation();$('#fileInput').click();});
+  $('#dropZone').addEventListener('click',()=>$('#fileInput').click());
+  $('#fileInput').addEventListener('change',e=>showFile(e.target.files[0]));
+  ['dragenter','dragover'].forEach(name=>$('#dropZone').addEventListener(name,e=>{e.preventDefault();$('#dropZone').classList.add('ready');}));
+  ['dragleave','drop'].forEach(name=>$('#dropZone').addEventListener(name,e=>{e.preventDefault();$('#dropZone').classList.remove('ready');}));
+  $('#dropZone').addEventListener('drop',e=>showFile(e.dataTransfer.files[0]));
+  $('#sendBtn').addEventListener('click',upload);
+  checkSession();
+})();
+</script>
+</body>
+</html>
