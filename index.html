@@ -3,76 +3,203 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0b1220" />
+  <meta name="theme-color" content="#181818" />
   <title>metrikAI — Packaged Commodity Compliance</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/style.css">
   <style>
-    :root{
-      --ink:#10213b;--muted:#66758d;--subtle:#98a5b7;--canvas:#f4f7fb;--panel:#fff;
-      --line:#e2e8f0;--nav:#0b1220;--nav2:#101d31;--blue:#2563eb;--teal:#0f9a8d;
-      --success:#07896b;--success-bg:#e8faf4;--warn:#b7791f;--warn-bg:#fff7df;
-      --danger:#d14343;--danger-bg:#fff0f0;--purple:#7446d7;--shadow:0 14px 38px rgba(25,42,70,.10);
-      --radius:18px;--radius-sm:12px;
+    :root {
+      --bg: #181818;
+      --panel: #1F1F1F;
+      --panel-hover: #272727;
+      --border: #313131;
+      --text: #FFFFFF;
+      --muted: #9B9B9B;
+      --primary: #FFFFFF;
+      --primary-text: #000000;
+      --success: #10B981;
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --warn: #F59E0B;
+      --warn-bg: rgba(245, 158, 11, 0.15);
+      --danger: #EF4444;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+      --radius-lg: 24px;
+      --radius: 16px;
+      --radius-sm: 8px;
+      --font-geist: 'Geist', sans-serif;
+      --transition: all 0.7s cubic-bezier(0.32,0.72,0,1);
     }
-    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--canvas);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
-    button,input,select,textarea{font:inherit} button{cursor:pointer} .app{min-height:100vh;display:flex}
-    .side{width:252px;min-height:100vh;background:linear-gradient(165deg,#091321 0%,#10253d 100%);color:#e8f0fb;padding:24px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
-    .brand{display:flex;align-items:center;gap:12px;padding:5px 8px 28px}.brand-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(140deg,#35d8bd,#4378f7);display:grid;place-items:center;box-shadow:0 7px 16px rgba(47,124,246,.32)}.brand-mark svg{width:25px;height:25px}.brand-name{font-weight:800;letter-spacing:-.4px;font-size:18px}.brand-name small{display:block;color:#9eb4ce;font-size:10px;letter-spacing:1.3px;font-weight:700;margin-top:2px}
-    .nav-label{padding:0 10px;color:#7792b0;font-weight:800;font-size:10px;letter-spacing:1.2px;margin-bottom:9px}.nav{display:grid;gap:5px}.nav-btn{border:0;background:transparent;color:#b6c8dc;border-radius:11px;padding:12px 11px;display:flex;gap:12px;align-items:center;text-align:left;font-weight:650;transition:.18s}.nav-btn svg{width:18px;height:18px;opacity:.9}.nav-btn:hover,.nav-btn.active{background:rgba(255,255,255,.11);color:#fff}.nav-btn.active{box-shadow:inset 3px 0 0 #35d8bd}.nav-btn.locked{opacity:.48}.nav-btn.locked:after{content:"•";font-size:12px;color:#f7c66b;margin-left:auto}
-    .side-foot{margin-top:auto;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:14px;padding:14px}.side-foot .tiny{color:#9eb4ce;font-size:11px;line-height:1.5}.profile{display:flex;align-items:center;gap:9px;margin-top:12px}.avatar{height:29px;width:29px;border-radius:50%;display:grid;place-items:center;background:#264460;color:#d9fbf4;font-weight:800;font-size:11px}.profile b{font-size:12px}.profile span{font-size:10px;color:#96aac2;display:block;margin-top:2px}
-    .main{flex:1;min-width:0;padding:26px 31px 44px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:20px;max-width:1500px;margin:0 auto 22px}.crumb{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}.crumb b{color:var(--ink)}.crumb .dot{height:4px;width:4px;background:#b8c2d1;border-radius:50%}.top-actions{display:flex;align-items:center;gap:10px}.rule-profile{padding:8px 11px;border:1px solid #d7e7f3;background:#f5fbff;color:#39708e;border-radius:100px;font-size:11px;font-weight:700}.help{height:35px;width:35px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--muted);display:grid;place-items:center;font-weight:800}
-    .hero{max-width:1500px;margin:0 auto 22px;display:flex;justify-content:space-between;gap:28px;align-items:flex-end}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:var(--teal);font-weight:850;margin-bottom:7px}.hero h1{font-size:27px;line-height:1.12;letter-spacing:-.9px;margin:0 0 8px}.hero p{max-width:730px;margin:0;color:var(--muted);line-height:1.55}.hero-note{max-width:325px;border-left:3px solid #8bded1;background:#edfafa;color:#3d716f;padding:10px 13px;font-size:11px;line-height:1.45;border-radius:0 9px 9px 0}
-    .view{display:none;max-width:1500px;margin:auto}.view.active{display:block}.grid{display:grid;grid-template-columns:minmax(360px,.87fr) minmax(510px,1.25fr);gap:20px;align-items:start}.card{background:var(--panel);border:1px solid rgba(214,224,236,.9);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .capture{padding:20px}.card-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:16px}.card-head h2{margin:0;font-size:16px;letter-spacing:-.3px}.card-head p{margin:4px 0 0;font-size:11px;color:var(--muted);line-height:1.45}.step{background:#eaf1ff;color:#3260c4;padding:4px 8px;border-radius:50px;font-size:10px;font-weight:800;letter-spacing:.45px;white-space:nowrap}
-    .source-tabs{display:flex;gap:6px;background:#f3f6fa;border-radius:11px;padding:4px;margin:0 0 14px}.source-tab{flex:1;padding:8px 5px;text-align:center;background:transparent;border:0;border-radius:8px;color:#6c7b90;font-size:11px;font-weight:750}.source-tab.active{color:#2753bb;background:#fff;box-shadow:0 2px 5px rgba(41,61,90,.1)}
-    .drop{border:1.5px dashed #b9c9df;border-radius:14px;background:#f8fbff;min-height:183px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;transition:.2s}.drop.drag{border-color:var(--blue);background:#edf4ff}.drop-inner{padding:18px}.drop svg{height:34px;width:34px;color:#4d74d8;margin-bottom:8px}.drop b{display:block;font-size:13px}.drop span{display:block;color:var(--muted);font-size:11px;margin-top:5px}.link-btn{border:0;background:transparent;color:#2766d4;font-weight:800;padding:0;margin-top:9px;font-size:12px}.preview{display:none;width:100%;height:215px;position:relative;background:#edf2f7}.preview.show{display:block}.preview img{width:100%;height:100%;object-fit:contain;background:#e7edf4}.preview-tag{position:absolute;bottom:9px;left:10px;background:rgba(16,33,59,.82);color:#fff;padding:5px 8px;border-radius:6px;font-size:10px;font-weight:700}.img-close{position:absolute;right:9px;top:9px;background:rgba(255,255,255,.93);height:28px;width:28px;border:0;border-radius:50%;font-size:18px;color:#6b7280;line-height:1}
-    .context{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}.field label{color:#637188;display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.65px;margin-bottom:5px}.select{height:37px;border:1px solid #dbe4ee;border-radius:9px;width:100%;padding:0 9px;color:#30415d;background:#fff;font-size:12px;outline:none}.select:focus,.textarea:focus{border-color:#82a9f1;box-shadow:0 0 0 3px rgba(67,120,247,.12)}
-    .text-label{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px}.text-label label{color:#637188;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.65px}.text-label span{font-size:10px;color:#8c99aa}.textarea{min-height:154px;width:100%;resize:vertical;border:1px solid #dbe4ee;border-radius:11px;padding:11px;color:#25354f;outline:none;line-height:1.5;font-size:12px;background:#fff}.scan-meta{min-height:19px;color:#637188;font-size:11px;margin-top:7px}.scan-meta.loading{color:#2e63c4}.scan-meta.error{color:#be3d46}
-    .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.btn{height:38px;padding:0 13px;border-radius:9px;border:1px solid #d2ddea;background:#fff;color:#334461;font-size:12px;font-weight:800;display:inline-flex;align-items:center;gap:7px}.btn svg{height:15px;width:15px}.btn.primary{background:linear-gradient(120deg,#2362dc,#376cf0);border-color:#2362dc;color:#fff;box-shadow:0 7px 14px rgba(48,103,220,.2)}.btn:hover{transform:translateY(-1px)}.btn.ghost{background:#f9fbfe}.divider{height:1px;background:#ebf0f5;margin:17px 0 13px}.demo-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.demo-row span{font-size:11px;color:#78869a}.demo-set{display:flex;gap:7px}.demo{border:1px solid #dbe4ee;color:#55677e;background:#fff;border-radius:7px;padding:6px 8px;font-weight:750;font-size:10px}.demo:hover{border-color:#77a6e9;color:#2563eb}
-    .results{overflow:hidden}.result-top{padding:18px 20px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #edf1f5}.result-title{display:flex;align-items:center;gap:11px}.result-title h2{font-size:16px;margin:0;letter-spacing:-.3px}.result-title p{font-size:10px;color:var(--muted);margin:3px 0 0}.status-pill{border-radius:99px;padding:6px 10px;font-size:10px;font-weight:850;letter-spacing:.35px;text-transform:uppercase}.status-pill.good{color:#087a60;background:#e5faf2}.status-pill.risk{color:#bd3e48;background:#ffedef}.status-pill.neutral{color:#688097;background:#eff4f8}
-    .score-row{display:grid;grid-template-columns:136px 1fr;gap:16px;padding:17px 20px;border-bottom:1px solid #edf1f5}.gauge{height:118px;width:118px;border-radius:50%;background:conic-gradient(var(--danger) 0deg 137deg,#e9edf3 137deg);display:grid;place-items:center;position:relative;margin:auto}.gauge:after{content:"";position:absolute;height:93px;width:93px;background:#fff;border-radius:50%}.gauge-text{position:relative;z-index:2;text-align:center}.gauge-text strong{font-size:26px;letter-spacing:-1.2px;display:block}.gauge-text span{font-size:9px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.6px}.score-copy{padding:7px 0}.score-copy b{font-size:13px}.score-copy p{color:var(--muted);font-size:11px;line-height:1.48;margin:5px 0 11px}.risk-counters{display:flex;gap:7px;flex-wrap:wrap}.counter{padding:5px 7px;border-radius:6px;font-size:10px;font-weight:800}.counter.fail{background:#fff0f0;color:#c2434a}.counter.warn{background:#fff7e4;color:#a56f1d}.counter.pass{background:#edfaf5;color:#087a60}
-    .result-body{padding:15px 20px 19px}.section-label{font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:1px;color:#758399;margin:0 0 9px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:16px}.found{border:1px solid #e3eaf2;border-radius:9px;padding:8px 9px;min-height:58px;background:#fbfdff}.found .name{font-size:9px;text-transform:uppercase;letter-spacing:.65px;color:#7c8a9e;font-weight:800;display:flex;justify-content:space-between;gap:8px}.found .value{font-size:11px;color:#233550;line-height:1.35;margin-top:5px;word-break:break-word}.found.empty{background:#fffafa;border-color:#f7dedf}.found.empty .value{color:#bf4850;font-style:italic}.confidence{font-size:9px;color:#07896b;font-style:normal}.confidence.low{color:#c0761c}
-    .checks{display:grid;gap:7px}.check{display:grid;grid-template-columns:25px minmax(0,1fr) auto;gap:9px;align-items:center;border:1px solid #e7edf3;border-radius:10px;padding:8px 9px}.check-icon{height:22px;width:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:900}.check-icon.pass{background:#e5faf2;color:#07896b}.check-icon.fail{background:#ffebed;color:#cc4049}.check-icon.warn,.check-icon.review{background:#fff6de;color:#ad761e}.check-icon.na{background:#edf1f5;color:#748397}.check-main b{font-size:11px;display:block}.check-main span{font-size:10px;color:#6d7b90;line-height:1.3;display:block;margin-top:2px}.check-rule{font-size:9px;color:#677a98;white-space:nowrap;font-weight:800}
-    .report-bar{max-width:1500px;margin:20px auto 0;background:#fff;border:1px solid #dfe8f1;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:13px;box-shadow:0 8px 23px rgba(28,50,77,.06)}.report-icon{width:32px;height:32px;border-radius:9px;background:#edf4ff;color:#3167d1;display:grid;place-items:center}.report-copy{min-width:0;flex:1}.report-copy b{font-size:12px}.report-copy span{display:block;color:var(--muted);font-size:10px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.report-actions{display:flex;gap:8px;flex-wrap:wrap}.small-btn{padding:7px 9px;border:1px solid #dbe4ee;background:#fff;border-radius:7px;color:#36516f;font-size:10px;font-weight:800}.small-btn.primary-small{background:#ecf3ff;border-color:#c8dbfc;color:#2c63c8}
-    .banner{max-width:1500px;margin:18px auto 0;color:#738199;font-size:10px;line-height:1.45;display:flex;gap:7px;align-items:flex-start}.banner svg{min-width:14px;width:14px;margin-top:1px;color:#6681a3}
-    .empty-results{padding:24px 20px;color:#7a889c;text-align:center}.empty-results svg{color:#a1b5ce;width:34px;height:34px}.empty-results h3{margin:8px 0 4px;font-size:14px;color:#4c5c73}.empty-results p{margin:0;font-size:11px;line-height:1.5}
-    .queue-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.55fr);gap:20px}.queue-card,.analytics-card,.rules-card{padding:20px}.view-heading{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:17px}.view-heading h2{margin:0;font-size:17px}.view-heading p{margin:5px 0 0;color:var(--muted);font-size:11px}.filter{height:33px;padding:0 9px;border:1px solid #dde5ee;border-radius:8px;color:#5d6d83;background:#fff;font-size:11px}.case-table{width:100%;border-collapse:collapse}.case-table th{text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.65px;color:#8794a6;border-bottom:1px solid #e9eef4;padding:9px 8px}.case-table td{padding:12px 8px;border-bottom:1px solid #edf1f5;font-size:11px;color:#45566e}.case-table td b{display:block;color:#20344f;font-size:11px}.case-table td span{font-size:10px;color:#7d8a9b;display:block;margin-top:2px}.tag{padding:4px 6px;border-radius:5px;font-size:9px;font-weight:850;white-space:nowrap}.tag.high{color:#bd3f48;background:#fff0f0}.tag.medium{color:#9a6a19;background:#fff7e4}.tag.low{color:#07896b;background:#e8faf4}.open-case{border:0;color:#2965d2;background:#eef4ff;border-radius:6px;padding:5px 7px;font-size:10px;font-weight:800}.queue-summary{display:grid;gap:10px}.summary-metric{border:1px solid #e4ebf2;border-radius:12px;padding:14px}.summary-metric span{display:block;font-size:10px;color:#748397;font-weight:800;text-transform:uppercase;letter-spacing:.65px}.summary-metric b{display:block;font-size:23px;letter-spacing:-.7px;margin:5px 0 1px}.summary-metric small{font-size:10px;color:#6f7e93}.priority-note{padding:13px;background:#f3f8ff;border:1px solid #dfeafa;border-radius:10px;color:#476887;line-height:1.48;font-size:11px}
-    .rules-card{min-height:550px}.rule-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.rule{border:1px solid #e4ebf2;border-radius:12px;padding:14px;position:relative;overflow:hidden}.rule:before{content:"";height:4px;width:100%;position:absolute;left:0;top:0;background:linear-gradient(90deg,#2d71ed,#3dbfad)}.rule .rule-code{font-size:10px;color:#3c70c8;font-weight:850;letter-spacing:.5px;margin-top:5px}.rule h3{font-size:13px;margin:8px 0 6px}.rule p{color:#647388;line-height:1.45;font-size:11px;margin:0}.rule .applies{margin-top:10px;font-size:9px;color:#77879d;font-weight:750}.roadmap{margin-top:18px;padding:14px;border-radius:12px;background:#f8fbff;border:1px solid #e0e9f7}.roadmap b{font-size:12px}.roadmap p{margin:6px 0 0;color:#60728b;line-height:1.5;font-size:11px}.analytics-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric-card{border:1px solid #e2eaf1;border-radius:12px;padding:13px}.metric-card span{font-size:9px;text-transform:uppercase;letter-spacing:.65px;color:#7f8ca0;font-weight:850}.metric-card b{font-size:22px;letter-spacing:-.65px;display:block;margin-top:6px}.metric-card em{font-style:normal;font-size:10px;color:#0d9174;font-weight:750}.chart{margin-top:16px;border:1px solid #e2eaf1;border-radius:12px;padding:14px}.chart h3{margin:0 0 13px;font-size:12px}.barrow{display:grid;grid-template-columns:128px 1fr 28px;gap:8px;align-items:center;margin:11px 0;font-size:10px;color:#5e6d81}.bar{height:9px;border-radius:50px;background:#edf1f5;overflow:hidden}.bar i{height:100%;display:block;border-radius:50px;background:linear-gradient(90deg,#4479eb,#30baa8)}.barrow strong{font-size:10px;color:#42536a;text-align:right}.insight{background:linear-gradient(145deg,#15345c,#1e508d);color:white;border-radius:14px;padding:19px}.insight .eyebrow{color:#80e1cf}.insight h3{font-size:19px;line-height:1.2;margin:8px 0}.insight p{font-size:11px;line-height:1.55;color:#d0e1f5}.insight ul{padding:0;margin:14px 0 0;list-style:none;display:grid;gap:9px}.insight li{font-size:11px;display:flex;gap:8px;color:#e2efff}.insight li:before{content:"✓";color:#70e2cc;font-weight:900}
-    .toast{position:fixed;right:24px;bottom:24px;max-width:350px;background:#173555;color:#fff;border-radius:11px;padding:12px 14px;box-shadow:0 16px 36px rgba(10,26,46,.28);font-size:12px;line-height:1.4;transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s;z-index:20}.toast.show{transform:translateY(0);opacity:1}.toast b{display:block;font-size:12px;margin-bottom:2px}.hidden{display:none!important}
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-geist); font-size: 14px; antialiased; line-height: 1.5; }
+    button, input, select, textarea { font: inherit; outline: none; }
+    button { cursor: pointer; transition: var(--transition); }
+    button:active { transform: scale(0.98); }
+    
+    .app { min-height: 100dvh; display: flex; flex-direction: column; }
+    
+    /* Island Nav */
+    .nav-island {
+      position: sticky; top: 16px; z-index: 50; margin: 0 auto 32px;
+      background: rgba(31, 31, 31, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 999px;
+      display: flex; align-items: center; padding: 8px; gap: 8px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 0 16px 0 8px; border-right: 1px solid var(--border); }
+    .brand-mark { width: 32px; height: 32px; background: var(--text); color: var(--bg); border-radius: 50%; display: grid; place-items: center; }
+    .brand-mark svg { width: 16px; height: 16px; }
+    .brand-name { font-weight: 600; font-size: 14px; letter-spacing: -0.2px; }
+    .nav { display: flex; gap: 4px; }
+    .nav-btn {
+      background: transparent; border: 0; color: var(--muted); padding: 8px 16px; border-radius: 999px;
+      font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px;
+    }
+    .nav-btn svg { width: 16px; height: 16px; }
+    .nav-btn:hover { color: var(--text); background: var(--panel-hover); }
+    .nav-btn.active { color: var(--primary-text); background: var(--primary); }
+    
+    .main { flex: 1; padding: 0 32px 64px; max-width: 1440px; margin: 0 auto; width: 100%; }
+    
+    /* Hero */
+    .hero { margin-bottom: 64px; max-width: 680px; }
+    .eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; margin-bottom: 16px; }
+    .hero h1 { font-size: 48px; line-height: 1; letter-spacing: -1.5px; margin: 0 0 24px; font-weight: 600; background: linear-gradient(90deg, #FFFFFF, #9B9B9B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--muted); font-size: 16px; line-height: 1.5; margin: 0; }
+    .hero-note { display: none; }
+    
+    .view { display: none; opacity: 0; transition: opacity 0.5s ease; }
+    .view.active { display: block; opacity: 1; }
+    
+    .grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 32px; align-items: start; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .capture { padding: 32px; }
+    .card-head { margin-bottom: 24px; }
+    .card-head h2 { font-size: 24px; margin: 0 0 8px; font-weight: 600; letter-spacing: -0.5px; }
+    .card-head p { margin: 0; font-size: 14px; color: var(--muted); }
+    
+    .source-tabs { display: flex; gap: 8px; background: rgba(0,0,0,0.2); border-radius: 999px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--border); width: fit-content; }
+    .source-tab { flex: 1; padding: 8px 16px; background: transparent; border: 0; color: var(--muted); font-size: 14px; font-weight: 500; border-radius: 999px; }
+    .source-tab.active { background: var(--panel-hover); color: var(--text); }
+    
+    .drop { border: 1px dashed var(--border); border-radius: var(--radius); background: rgba(0,0,0,0.2); min-height: 200px; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; transition: var(--transition); }
+    .drop:hover { border-color: var(--muted); }
+    .drop-inner { padding: 32px; }
+    .drop svg { height: 24px; width: 24px; color: var(--muted); margin-bottom: 16px; }
+    .drop b { display: block; font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+    .drop span { display: block; color: var(--muted); font-size: 12px; }
+    .link-btn { border: 0; background: transparent; color: var(--text); font-weight: 500; text-decoration: underline; margin-top: 16px; padding: 0; }
+    
+    .preview { display: none; width: 100%; height: 100%; position: absolute; inset: 0; background: var(--bg); border-radius: var(--radius); overflow: hidden; }
+    .preview.show { display: block; }
+    .preview img { width: 100%; height: 100%; object-fit: contain; }
+    .preview-tag { position: absolute; bottom: 16px; left: 16px; background: rgba(0,0,0,0.8); padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 500; border: 1px solid var(--border); }
+    .img-close { position: absolute; right: 16px; top: 16px; background: rgba(0,0,0,0.8); height: 32px; width: 32px; border: 1px solid var(--border); border-radius: 50%; color: var(--text); display: grid; place-items: center; font-size: 16px; }
+    
+    .context { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 32px 0; }
+    .field label { color: var(--muted); display: block; font-size: 12px; font-weight: 500; margin-bottom: 8px; }
+    .select { height: 48px; width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 0 16px; font-size: 14px; transition: var(--transition); }
+    .select:focus, .textarea:focus { border-color: var(--muted); }
+    
+    .text-label { margin-bottom: 8px; }
+    .text-label label { color: var(--text); font-size: 14px; font-weight: 500; }
+    .textarea { width: 100%; min-height: 160px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; color: var(--text); font-size: 14px; resize: vertical; transition: var(--transition); }
+    
+    .scan-meta { font-size: 12px; color: var(--muted); margin-top: 12px; min-height: 18px; }
+    
+    .actions { display: flex; gap: 16px; margin-top: 32px; }
+    .btn { height: 48px; padding: 0 24px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn.primary { background: var(--primary); color: var(--primary-text); border-color: var(--primary); }
+    .btn:hover { background: var(--panel-hover); }
+    .btn.primary:hover { opacity: 0.9; background: var(--primary); }
+    
+    .demo-row { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .demo-row span { font-size: 12px; color: var(--muted); }
+    .demo-set { display: flex; gap: 8px; }
+    .demo { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 999px; font-size: 12px; }
+    
+    .results { display: flex; flex-direction: column; }
+    .result-top { padding: 32px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
+    .result-title h2 { font-size: 24px; margin: 0 0 8px; font-weight: 600; letter-spacing: -0.5px; }
+    .result-title p { font-size: 12px; color: var(--muted); margin: 0; }
+    .status-pill { padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-pill.good { background: var(--success-bg); color: var(--success); }
+    .status-pill.risk { background: var(--danger-bg); color: var(--danger); }
+    .status-pill.neutral { background: var(--warn-bg); color: var(--warn); }
+    
+    .score-row { padding: 32px; border-bottom: 1px solid var(--border); display: flex; gap: 32px; align-items: center; }
+    .gauge { width: 120px; height: 120px; border-radius: 50%; background: var(--border); display: grid; place-items: center; position: relative; }
+    .gauge:after { content: ""; position: absolute; width: 104px; height: 104px; background: var(--panel); border-radius: 50%; }
+    .gauge-text { position: relative; z-index: 2; text-align: center; }
+    .gauge-text strong { font-size: 32px; font-weight: 600; line-height: 1; display: block; }
+    .gauge-text span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .score-copy b { font-size: 16px; font-weight: 500; }
+    .score-copy p { color: var(--muted); margin: 8px 0 16px; font-size: 14px; }
+    .risk-counters { display: flex; gap: 8px; }
+    .counter { padding: 4px 8px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; }
+    .counter.fail { background: var(--danger-bg); color: var(--danger); }
+    .counter.warn { background: var(--warn-bg); color: var(--warn); }
+    .counter.pass { background: var(--success-bg); color: var(--success); }
+    
+    .result-body { padding: 32px; }
+    .section-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+    .found { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; }
+    .found .name { font-size: 12px; color: var(--muted); margin-bottom: 8px; display: flex; justify-content: space-between; }
+    .found .value { font-size: 14px; color: var(--text); font-weight: 500; }
+    .confidence { font-size: 10px; color: var(--success); }
+    .confidence.low { color: var(--warn); }
+    
+    .checks { display: grid; gap: 12px; }
+    .check { display: flex; gap: 16px; padding: 16px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); align-items: flex-start; }
+    .check-icon { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 600; flex-shrink: 0; }
+    .check-icon.pass { background: var(--success-bg); color: var(--success); }
+    .check-icon.fail { background: var(--danger-bg); color: var(--danger); }
+    .check-icon.warn, .check-icon.review { background: var(--warn-bg); color: var(--warn); }
+    .check-icon.na { background: var(--border); color: var(--muted); }
+    .check-main { flex: 1; }
+    .check-main b { display: block; font-size: 14px; margin-bottom: 4px; }
+    .check-main span { display: block; font-size: 12px; color: var(--muted); }
+    .check-rule { font-size: 12px; color: var(--muted); font-weight: 500; }
+    
+    .empty-results { padding: 64px 32px; text-align: center; color: var(--muted); }
+    .empty-results svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5; }
+    .empty-results h3 { font-size: 18px; color: var(--text); margin: 0 0 8px; }
+    .empty-results p { font-size: 14px; margin: 0; }
+    
+    .toast { position: fixed; bottom: 32px; right: 32px; background: var(--panel); border: 1px solid var(--border); padding: 16px 24px; border-radius: var(--radius); box-shadow: 0 24px 48px rgba(0,0,0,0.5); z-index: 100; opacity: 0; transform: translateY(16px); transition: var(--transition); pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast b { display: block; font-size: 14px; margin-bottom: 4px; }
+    
+    /* Utility classes for layout overrides */
+    .hidden { display: none !important; }
+    
+    /* Merge modal and repository styles from main */
     .role-control{height:35px;border:1px solid #d7e3ef;border-radius:9px;background:#fff;display:flex;align-items:center;gap:6px;padding:0 8px;color:#5f7087;font-size:10px;font-weight:800}.role-control select{border:0;background:transparent;color:#284969;font-weight:800;font-size:11px;outline:none}.visual-audit{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 20px;border-bottom:1px solid #edf1f5;background:#fbfdff}.visual-metric{border:1px solid #e1eaf3;border-radius:9px;background:#fff;padding:8px 9px;min-height:59px}.visual-metric span{display:block;color:#8190a3;font-size:8.5px;font-weight:850;letter-spacing:.6px;text-transform:uppercase}.visual-metric b{display:block;color:#27415f;font-size:12px;margin-top:5px;line-height:1.15}.visual-metric em{display:block;color:#758499;font-size:9px;font-style:normal;margin-top:3px;line-height:1.25}.visual-metric.good{border-color:#c7ebdf;background:#fbfffd}.visual-metric.good b{color:#087b64}.visual-metric.warn{border-color:#f5dfb4;background:#fffdf8}.visual-metric.warn b{color:#a56d18}.visual-metric.review{border-color:#d8e4f5;background:#fbfdff}.repository-card{padding:20px;min-height:520px}.repo-actions{display:flex;gap:8px;align-items:center}.repo-search{height:34px;width:245px;border:1px solid #dce5ef;border-radius:8px;padding:0 10px;color:#40536c;font-size:11px;outline:none}.repo-search:focus{border-color:#84acef;box-shadow:0 0 0 3px rgba(58,111,230,.12)}.repo-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:4px 0 16px}.repo-metric{border:1px solid #e2eaf2;border-radius:10px;background:#fbfdff;padding:10px 11px}.repo-metric span{font-size:8.5px;text-transform:uppercase;letter-spacing:.62px;color:#8290a2;font-weight:850}.repo-metric b{display:block;margin-top:4px;font-size:19px;color:#294360}.repo-list{display:grid;gap:8px}.repo-empty{border:1px dashed #c7d5e5;border-radius:12px;padding:36px 18px;text-align:center;color:#73839a;font-size:12px;line-height:1.5;background:#fbfdff}.repo-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:12px;align-items:center;border:1px solid #e4ebf2;border-radius:11px;padding:11px 12px;background:#fff}.repo-row b{display:block;font-size:12px;color:#203550}.repo-row span{display:block;color:#708096;font-size:10px;margin-top:3px;line-height:1.35}.repo-score{min-width:60px;text-align:center;padding:7px 8px;border-radius:8px;background:#eef4ff;color:#2d66cb;font-size:10px;font-weight:850}.repo-score.high{background:#fff0f1;color:#c34750}.repo-score.medium{background:#fff7e7;color:#a56d18}.repo-controls{display:flex;gap:6px}.repo-open,.repo-delete{border:0;border-radius:7px;padding:6px 8px;font-size:10px;font-weight:800}.repo-open{background:#edf4ff;color:#2c62c7}.repo-delete{background:#fff1f2;color:#b7444c}.repo-disclaimer{margin-top:15px;padding:11px 12px;border-radius:9px;background:#f5f9fd;border:1px solid #e0eaf5;color:#64768f;font-size:10px;line-height:1.45}
-    .modal-backdrop{position:fixed;inset:0;z-index:40;background:rgba(7,20,38,.57);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px}.modal-backdrop.show{display:flex}.phone-modal{width:min(670px,100%);background:#fff;border-radius:21px;border:1px solid #dae4ef;box-shadow:0 26px 70px rgba(5,19,37,.34);overflow:hidden}.phone-modal-head{padding:21px 22px 13px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.modal-kicker{font-size:9px;font-weight:850;letter-spacing:1.1px;color:#168d7e;text-transform:uppercase}.phone-modal h2{font-size:20px;letter-spacing:-.55px;margin:4px 0 0}.modal-close{border:1px solid #dce5ef;border-radius:9px;background:#fff;height:31px;width:31px;font-size:20px;line-height:1;color:#6b7b90}.qr-transfer-grid{display:grid;grid-template-columns:230px 1fr;gap:20px;padding:8px 22px 18px}.qr-panel{border:1px solid #d7e5f4;border-radius:15px;background:#f8fbff;padding:13px;text-align:center}.qr-code{min-height:178px;display:grid;place-items:center;background:#fff;border-radius:10px;border:1px solid #edf2f7;overflow:hidden}.qr-code svg{width:170px;height:170px;display:block}.qr-placeholder{color:#7d8da2;font-size:11px;font-weight:700}.qr-caption{margin:9px 0 0;color:#66768c;font-size:10px;line-height:1.4}.phone-instructions{padding:2px 0}.phone-instructions h3{margin:0 0 11px;font-size:13px}.phone-step{display:grid;grid-template-columns:25px 1fr;gap:8px;align-items:start;margin:9px 0}.phone-step i{font-style:normal;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:#e9f2ff;color:#2e66ce;font-size:10px;font-weight:850}.phone-step b{font-size:11px;display:block}.phone-step span{display:block;color:#6d7c90;font-size:10px;line-height:1.36;margin-top:2px}.phone-open-link{display:inline-flex;align-items:center;gap:6px;color:#2d66cf;font-weight:800;font-size:11px;margin-top:7px;text-decoration:none}.phone-origin-hint{margin:8px 0 0;color:#8795a8;font-size:9.5px;line-height:1.4}.phone-transfer-status{border-top:1px solid #edf1f5;padding:12px 22px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fbfdff}.transfer-state{display:flex;align-items:center;gap:8px;color:#63758f;font-size:11px;line-height:1.35}.transfer-state i{width:8px;height:8px;border-radius:50%;background:#4c7fe2;box-shadow:0 0 0 4px #e8f0ff}.transfer-state.ready{color:#087e67}.transfer-state.ready i{background:#0e9a7f;box-shadow:0 0 0 4px #ddf7f0}.transfer-state.error{color:#b7424d}.transfer-state.error i{background:#d54a54;box-shadow:0 0 0 4px #ffe6e8}.new-transfer{border:1px solid #d7e3f1;background:#fff;color:#3c5e86;border-radius:7px;padding:6px 8px;font-size:10px;font-weight:800;white-space:nowrap}
-    @media(max-width:1100px){.side{width:72px;padding:20px 10px}.brand{justify-content:center;padding-bottom:25px}.brand-name,.nav-label,.nav-btn span,.side-foot{display:none}.nav-btn{justify-content:center;padding:12px}.main{padding:24px 20px}.grid{grid-template-columns:1fr}.hero-note{display:none}}
-    @media(max-width:700px){.app{display:block}.side{height:auto;min-height:0;width:100%;position:static;display:flex;flex-direction:row;padding:10px;align-items:center}.brand{padding:0;flex:1;justify-content:flex-start}.brand-name{display:block}.nav{display:flex;gap:2px}.nav-btn{padding:9px}.nav-btn span{display:none}.main{padding:17px 12px 32px}.topbar{margin-bottom:18px}.crumb{display:none}.rule-profile{font-size:9px}.hero h1{font-size:23px}.hero{margin-bottom:15px}.context,.field-grid,.queue-layout,.analytics-layout{grid-template-columns:1fr}.score-row{grid-template-columns:120px 1fr}.gauge{height:105px;width:105px}.gauge:after{height:82px;width:82px}.result-top{padding:15px}.capture{padding:16px}.rule-grid,.metric-grid{grid-template-columns:1fr}.case-table th:nth-child(3),.case-table td:nth-child(3){display:none}.report-bar{align-items:flex-start;flex-wrap:wrap}.report-actions{width:100%}.actions .btn{flex:1;justify-content:center}.demo-row{align-items:flex-start;flex-direction:column}.side .nav-btn.active{box-shadow:none}.top-actions{gap:6px}.modal-backdrop{padding:10px;align-items:flex-end}.phone-modal{border-radius:18px}.phone-modal-head{padding:17px 16px 9px}.qr-transfer-grid{grid-template-columns:1fr;padding:6px 16px 14px;gap:13px}.qr-panel{display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:center;text-align:left}.qr-code{min-height:134px}.qr-code svg{width:128px;height:128px}.qr-caption{font-size:10px}.phone-transfer-status{padding:11px 16px 13px}.visual-audit{grid-template-columns:1fr 1fr;padding:11px 15px}.repo-metrics{grid-template-columns:1fr 1fr}.repo-actions{width:100%;margin-top:8px}.repo-search{flex:1;width:auto}.repo-row{grid-template-columns:1fr auto}.repo-controls{grid-column:1/-1}.role-control span{display:none}}
-    @media print{.side,.topbar,.hero,.capture,.report-bar,.banner,.toast,.modal-backdrop{display:none!important}.main{padding:0}.view{display:block!important}.results{box-shadow:none}.card{box-shadow:none;border:0}.grid{display:block}.results{max-width:none}.checks{grid-template-columns:1fr 1fr}.check{break-inside:avoid}}
+    .modal-backdrop{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.8);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px}.modal-backdrop.show{display:flex}.phone-modal{width:min(670px,100%);background:var(--bg);border-radius:var(--radius-lg);border:1px solid var(--border);box-shadow:0 26px 70px rgba(0,0,0,.5);overflow:hidden}.phone-modal-head{padding:21px 22px 13px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.modal-kicker{font-size:9px;font-weight:850;letter-spacing:1.1px;color:var(--success);text-transform:uppercase}.phone-modal h2{font-size:20px;letter-spacing:-.55px;margin:4px 0 0}.modal-close{border:1px solid var(--border);border-radius:9px;background:transparent;height:31px;width:31px;font-size:20px;line-height:1;color:var(--text);cursor:pointer;}.qr-transfer-grid{display:grid;grid-template-columns:230px 1fr;gap:20px;padding:8px 22px 18px}.qr-panel{border:1px solid var(--border);border-radius:15px;background:var(--panel);padding:13px;text-align:center}.qr-code{min-height:178px;display:grid;place-items:center;background:#fff;border-radius:10px;border:1px solid var(--border);overflow:hidden}.qr-code svg{width:170px;height:170px;display:block}.qr-placeholder{color:var(--muted);font-size:11px;font-weight:700}.qr-caption{margin:9px 0 0;color:var(--muted);font-size:10px;line-height:1.4}.phone-instructions{padding:2px 0}.phone-instructions h3{margin:0 0 11px;font-size:13px}.phone-step{display:grid;grid-template-columns:25px 1fr;gap:8px;align-items:start;margin:9px 0}.phone-step i{font-style:normal;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:var(--panel);color:var(--text);font-size:10px;font-weight:850}.phone-step b{font-size:11px;display:block}.phone-step span{display:block;color:var(--muted);font-size:10px;line-height:1.36;margin-top:2px}.phone-open-link{display:inline-flex;align-items:center;gap:6px;color:var(--text);font-weight:800;font-size:11px;margin-top:7px;text-decoration:underline}.phone-origin-hint{margin:8px 0 0;color:var(--muted);font-size:9.5px;line-height:1.4}.phone-transfer-status{border-top:1px solid var(--border);padding:12px 22px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--panel)}.transfer-state{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;line-height:1.35}.transfer-state i{width:8px;height:8px;border-radius:50%;background:var(--muted);box-shadow:0 0 0 4px var(--border)}.transfer-state.ready{color:var(--success)}.transfer-state.ready i{background:var(--success);box-shadow:0 0 0 4px var(--success-bg)}.transfer-state.error{color:var(--danger)}.transfer-state.error i{background:var(--danger);box-shadow:0 0 0 4px var(--danger-bg)}.new-transfer{border:1px solid var(--border);background:transparent;color:var(--text);border-radius:7px;padding:6px 8px;font-size:10px;font-weight:800;white-space:nowrap;cursor:pointer;}
+
   </style>
 </head>
-<body>
+
 <div class="app">
-  <aside class="side" aria-label="Main navigation">
+  <nav class="nav-island">
     <div class="brand">
-      <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3 4.5 6v5.4c0 4.5 3.1 8.6 7.5 9.6 4.4-1 7.5-5.1 7.5-9.6V6L12 3Z"/><path d="m8.4 12 2.25 2.25L15.9 9"/></svg></div>
-      <div class="brand-name">metrikAI<small>LABEL INTELLIGENCE</small></div>
+      <div class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3 4.5 6v5.4c0 4.5 3.1 8.6 7.5 9.6 4.4-1 7.5-5.1 7.5-9.6V6L12 3Z"/><path d="m8.4 12 2.25 2.25L15.9 9"/></svg></div>
+      <div class="brand-name">metrikAI</div>
     </div>
-    <div class="nav-label">WORKSPACE</div>
-    <nav class="nav">
-      <button class="nav-btn active" data-view="scannerView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3"/><path d="M7 12h10M9 9v6M12 9v6M15 9v6"/></svg><span>New inspection</span></button>
-      <button class="nav-btn" data-view="queueView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span>Review queue</span></button>
-      <button class="nav-btn" data-view="repositoryView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>Inspection repository</span></button>
-      <button class="nav-btn" data-view="rulesView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg><span>Rule library</span></button>
-      <button class="nav-btn" data-view="analyticsView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 19V5M4 19h16M8 16v-4M12 16V8M16 16V5"/></svg><span>Field insights</span></button>
-    </nav>
-    <div class="side-foot">
-      <div class="tiny">Decision support only. Findings retain their evidence and confidence for officer review.</div>
-      <div class="profile"><div class="avatar">LO</div><div><b>Legal Metrology Officer</b><span>Demo workspace</span></div></div>
+    <div class="nav">
+      <button class="nav-btn active" data-view="scannerView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3"/><path d="M7 12h10M9 9v6M12 9v6M15 9v6"/></svg><span>Inspection</span></button>
+      <button class="nav-btn" data-view="queueView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span>Queue</span></button>
+      <button class="nav-btn" data-view="repositoryView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>Repository</span></button>
+      <button class="nav-btn" data-view="rulesView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg><span>Rules</span></button>
+      <button class="nav-btn" data-view="analyticsView"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 19V5M4 19h16M8 16v-4M12 16V8M16 16V5"/></svg><span>Insights</span></button>
     </div>
-  </aside>
+  </nav>
 
   <main class="main">
-    <header class="topbar">
+<header class="topbar">
       <div class="crumb"><b>Compliance workspace</b><i class="dot"></i><span>Pre-screening</span><i class="dot"></i><span id="crumbMode">Label image</span></div>
       <div class="top-actions"><span class="rule-profile">LMPC rule profile • 2026.08</span><label class="role-control" title="Prototype role view; production requires secure SSO/RBAC"><span>Role</span><select id="roleSelect"><option value="inspector">Inspector</option><option value="supervisor">Supervisor</option><option value="admin">Admin</option></select></label><button class="help" id="helpBtn" title="About this prototype">?</button></div>
     </header>
-
-    <section class="hero">
+<section class="hero">
       <div><div class="eyebrow">Explainable label screening</div><h1>Turn a package declaration into an actionable compliance review.</h1><p>Capture a product label or paste a product listing. metrikAI extracts key declarations, applies a transparent rule profile, and routes uncertain findings to a human officer.</p></div>
       <div class="hero-note"><b>Prototype scope:</b> OCR and rule-based pre-screening. It flags likely gaps, not a final legal determination. Use the official consolidated Rules and authorised review before action.</div>
     </section>
@@ -105,7 +232,6 @@
           <div class="divider"></div>
           <div class="demo-row"><span>Repeatable demonstration labels</span><div class="demo-set"><button class="demo" data-demo="risk">Load gap demo</button><button class="demo" data-demo="clean">Load declaration demo</button></div></div>
         </section>
-
         <section class="card results" id="resultsCard" aria-live="polite">
           <div class="empty-results" id="emptyResults"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 3h12l4 4v14H4z"/><path d="M16 3v5h5M8 13h8M8 17h5"/></svg><h3>Ready for an evidence-led review</h3><p>Once analyzed, declaration fields, confidence and rule-linked findings will appear here.</p></div>
           <div id="resultContent" class="hidden">
@@ -116,23 +242,7 @@
           </div>
         </section>
       </div>
-      <div class="report-bar"><div class="report-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg></div><div class="report-copy"><b>Officer-ready case note</b><span id="reportSummary">Analyze a label to create a compact evidence summary, with raw-text traceability and rule references.</span></div><div class="report-actions"><button class="small-btn primary-small" id="downloadPdf">Download PDF</button><button class="small-btn" id="downloadDoc">Editable DOC</button><button class="small-btn" id="downloadReport">Case note</button><button class="small-btn" id="exportJson">JSON</button><button class="small-btn" id="printReport">Print</button></div></div>
-      <div class="banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 10v5M12 7h.01"/></svg><span>Rule profile includes a selected declaration baseline and context-aware checks. Exemptions, commodity-specific requirements, image legibility, quantity verification and any enforcement decision require human verification against the current official text.</span></div>
-    </section>
-
-    <section class="view" id="queueView">
-      <div class="queue-layout"><section class="card queue-card"><div class="view-heading"><div><h2>Review queue</h2><p>Triaged cases — highest risk and lowest confidence first.</p></div><select class="filter"><option>All cases</option><option>High risk</option><option>Needs review</option></select></div><table class="case-table"><thead><tr><th>Case</th><th>Key finding</th><th>Source</th><th>Risk</th><th></th></tr></thead><tbody><tr><td><b>LM-2026-1048</b><span>Sparkle Fresh Gel</span></td><td>Address + consumer care not found</td><td>On-pack</td><td><span class="tag high">High</span></td><td><button class="open-case" data-open-demo="risk">Open</button></td></tr><tr><td><b>LM-2026-1044</b><span>Imported coffee jar</span></td><td>Country-of-origin field requires review</td><td>E-commerce</td><td><span class="tag medium">Medium</span></td><td><button class="open-case" data-open-demo="import">Open</button></td></tr><tr><td><b>LM-2026-1031</b><span>Aarna Face Wash</span></td><td>Declaration-rich sample</td><td>On-pack</td><td><span class="tag low">Low</span></td><td><button class="open-case" data-open-demo="clean">Open</button></td></tr><tr><td><b>LM-2026-1027</b><span>Multipack tissue</span></td><td>Unit-price exception needs context</td><td>On-pack</td><td><span class="tag medium">Medium</span></td><td><button class="open-case" data-open-demo="multi">Open</button></td></tr></tbody></table></section><aside class="card queue-card"><div class="view-heading"><div><h2>Today’s triage</h2><p>Sample dashboard data</p></div></div><div class="queue-summary"><div class="summary-metric"><span>Packages screened</span><b>148</b><small>Across 6 submitted batches</small></div><div class="summary-metric"><span>High-priority flags</span><b>19</b><small>Missing key declarations or invalid context</small></div><div class="summary-metric"><span>Officer review</span><b>11</b><small>Visual or rule-scope verification required</small></div><div class="priority-note"><b>Why a queue matters</b><br/>The app does not replace an officer. It makes the first pass explainable, creates a reproducible case note and directs attention to evidence-rich exceptions.</div></div></aside></div>
-    </section>
-
-    <section class="view" id="repositoryView">
-      <section class="card repository-card"><div class="view-heading"><div><h2>Inspection repository</h2><p>Search locally saved scans, evidence text, findings and export-ready case records.</p></div><div class="repo-actions"><input id="repoSearch" class="repo-search" type="search" placeholder="Search product, entity, case ID…" /><button class="small-btn" id="clearRepository">Clear repository</button></div></div><div class="repo-metrics" id="repoMetrics"></div><div class="repo-list" id="repoList"></div><div class="repo-disclaimer">Prototype storage uses this browser’s local repository. Production deployment should use an encrypted central database, retention policy, audit logs, object storage for photographs and organisation-approved RBAC/SSO.</div></section>
-    </section>
-
-    <section class="view" id="rulesView"><section class="card rules-card"><div class="view-heading"><div><h2>Rule library — prototype baseline</h2><p>Versioned checks are intentionally visible, so every finding can be traced to an assumption.</p></div><span class="rule-profile">Selected LMPC checks</span></div><div class="rule-grid"><article class="rule"><div class="rule-code">RULE 6 / 10</div><h3>Responsible entity &amp; address</h3><p>Look for the name and address of the manufacturer, packer, importer or eligible brand owner/marketer context.</p><div class="applies">ON-PACK • E-COMMERCE</div></article><article class="rule"><div class="rule-code">RULE 6 / 11–13</div><h3>Commodity &amp; net quantity</h3><p>Extract common/generic name, quantity and a standard unit. Flag ambiguous forms for a human check.</p><div class="applies">ON-PACK • E-COMMERCE</div></article><article class="rule"><div class="rule-code">RULE 6</div><h3>MRP and unit sale price</h3><p>Detect retail sale price in Indian currency, tax-inclusive wording and the unit-sale-price condition, with multipack exceptions.</p><div class="applies">CONTEXT-AWARE</div></article><article class="rule"><div class="rule-code">RULE 6</div><h3>Date &amp; consumer care</h3><p>Check manufacture-date declaration where applicable and phone/email contact details for consumer grievances.</p><div class="applies">ON-PACK • REVIEW SCOPE</div></article><article class="rule"><div class="rule-code">RULE 6(10) / 6(10A)</div><h3>E-commerce declarations</h3><p>Pre-screen listing text. For imported products, the workflow explicitly routes country-of-origin listing/filter compliance for verification.</p><div class="applies">E-COMMERCE • IMPORTED</div></article><article class="rule"><div class="rule-code">RULE 7 / 9</div><h3>Display &amp; legibility review</h3><p>Image quality, contrast and OCR confidence establish evidence cues; final principal-display and size assessment remains human-assisted.</p><div class="applies">IMAGE-BASED REVIEW</div></article></div><div class="roadmap"><b>Rule governance built into the product</b><p>Each rule is represented as a versioned, testable policy object with jurisdiction, effective dates, source link, exceptions and officer-approved wording. This enables amendments to be deployed without retraining a vision model.</p></div></section></section>
-
-    <section class="view" id="analyticsView"><div class="analytics-layout"><section class="card analytics-card"><div class="view-heading"><div><h2>Enforcement dashboard</h2><p>Live aggregate view from cases saved in this browser repository.</p></div><span class="rule-profile" id="analyticsScope">Local repository</span></div><div class="metric-grid"><div class="metric-card"><span>Saved inspections</span><b id="analyticsCases">0</b><em id="analyticsCasesNote">No cases yet</em></div><div class="metric-card"><span>Average pre-screen score</span><b id="analyticsScore">—</b><em id="analyticsScoreNote">Analyze a label to begin</em></div><div class="metric-card"><span>Priority review cases</span><b id="analyticsPriority">0</b><em id="analyticsPriorityNote">No exceptions logged</em></div></div><div class="chart"><h3 id="analyticsChartTitle">Detected declaration gaps</h3><div id="analyticsBars"><div class="repo-empty">Save inspection cases to populate this dashboard with local compliance trends.</div></div></div></section><aside class="insight"><div class="eyebrow">Operational view</div><h3>Move from individual flags to targeted field action.</h3><p>Use the dashboard with role-aware review, evidence-led reports and the searchable repository to focus enforcement effort on recurring issues.</p><ul><li>Trend gaps by declaration type</li><li>Retrieve reports and evidence text</li><li>Escalate low-confidence visual checks</li><li>Export PDF, editable DOC and JSON</li></ul></aside></div></section>
-  </main>
-</div>
+</main></div>
 <div class="modal-backdrop" id="phoneModal" aria-hidden="true">
   <section class="phone-modal" role="dialog" aria-modal="true" aria-labelledby="phoneModalTitle">
     <div class="phone-modal-head"><div><span class="modal-kicker">Cross-device capture</span><h2 id="phoneModalTitle">Send a label photo from your phone</h2></div><button class="modal-close" id="phoneModalClose" type="button" aria-label="Close phone transfer">×</button></div>
