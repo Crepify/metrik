@@ -47,6 +47,9 @@ The prototype is designed as **decision support**, not an automated final enforc
 | **Structured field extraction** | Detects product name, manufacturer/packer/importer, address, net quantity, MRP, date, consumer care and country of origin. |
 | **Evidence traceability** | Displays the value that was matched or clearly marks it as not detected. |
 | **Confidence-aware flow** | OCR confidence and image evidence are surfaced as review cues rather than hidden. |
+| **Image-quality audit** | Records image dimensions, OCR confidence and declaration-bounding-box availability. |
+| **Calibrated font-height proxy** | Combines OCR word geometry, label width in mm and a configurable threshold; it explicitly routes physical confirmation to an officer. |
+| **Placement evidence** | Records declaration-anchor geometry for review of principal display panel placement. |
 
 ### 3. Legal Metrology pre-screening
 
@@ -64,6 +67,7 @@ The prototype is designed as **decision support**, not an automated final enforc
 | **E-commerce review cue** | Adds an origin-filter verification cue for imported e-commerce products. |
 | **Scope awareness** | Supports retail, institutional/industrial and multipack context to reduce blind flags. |
 | **Visual-review cue** | Clearly routes print legibility, contrast and principal-display assessment to human review. |
+| **Font-size and placement proxy** | Performs an image/OCR-based pre-screen when calibration inputs are available; it never replaces physical verification. |
 
 ### 4. Explainable decision support
 
@@ -72,8 +76,10 @@ The prototype is designed as **decision support**, not an automated final enforc
 | **Compliance pre-screen score** | Combines missing declarations and context conditions into a transparent triage score. |
 | **Rule-linked findings** | Every finding carries a reference label and a plain-language explanation. |
 | **Pass / warning / gap / review states** | Avoids a simplistic compliant/non-compliant black-box result. |
-| **Officer-ready case note** | Downloads a readable case summary with evidence text and findings. |
-| **JSON export** | Exports structured declarations and rule-linked findings for later integration. |
+| **PDF report** | Generates a downloadable PDF with findings and eligible attached image evidence. |
+| **Editable DOC report** | Generates a Word-compatible editable document report. |
+| **Officer-ready case note** | Downloads a readable text case summary with evidence text and findings. |
+| **JSON export** | Exports structured declarations, visual audit and rule-linked findings for later integration. |
 | **Print view** | Provides a print-friendly findings view. |
 
 ### 5. Workflow and analytics screens
@@ -81,8 +87,10 @@ The prototype is designed as **decision support**, not an automated final enforc
 | Feature | What it does |
 |---|---|
 | **Review queue** | Demonstrates risk-based triage and sample case prioritisation. |
+| **Inspection repository** | Saves real user scans in the browser, with search, open, delete and report retrieval controls. |
+| **Dynamic enforcement dashboard** | Aggregates locally saved cases, average score, priority cases and common declaration gaps. |
 | **Rule library** | Makes the selected prototype rule baseline visible to reviewers. |
-| **Field insights dashboard** | Demonstrates aggregate gap patterns and review-oriented metrics. |
+| **Role-aware prototype view** | Demonstrates Inspector, Supervisor and Admin workflow separation; production security is documented separately. |
 | **Human-in-the-loop design** | Keeps low-confidence, visual and exception cases in an officer-review path. |
 
 ### 6. Trust, privacy and governance safeguards
@@ -100,17 +108,17 @@ The prototype is designed as **decision support**, not an automated final enforc
 ## Prototype workflow
 
 ```text
-Package image / Camera / Listing text
+Package image / Camera / QR phone transfer / Listing text
                 ↓
-      OCR + editable declaration text
+ OCR + editable declaration text + image-quality signals
                 ↓
-     Structured field extraction
+ Structured field extraction + font/placement evidence proxy
                 ↓
  Context-aware Legal Metrology rule checks
                 ↓
  Score + evidence + human-review cues
                 ↓
- Case note / JSON / queue / dashboard
+ PDF / editable DOC / JSON / repository / dashboard
 ```
 
 ---
@@ -131,8 +139,11 @@ Package image / Camera / Listing text
 - **Frontend:** Vanilla HTML, CSS and JavaScript
 - **OCR:** Tesseract.js loaded in-browser when available
 - **Rule engine:** Transparent regex / rule-profile logic in the browser
-- **Outputs:** Browser-generated text case note, JSON export and print view
-- **Deployment:** Static web app; no backend required for the prototype
+- **Visual audit:** OCR bounding boxes, image resolution and calibrated font-height proxy
+- **Reports:** Local jsPDF PDF export, editable Word-compatible DOC, text, JSON and print view
+- **Repository:** Browser-local searchable inspection history for the prototype
+- **Access view:** Local Inspector / Supervisor / Admin demo mode
+- **Deployment:** `server.py` serves the app plus same-origin, short-lived phone-transfer API; no cloud database is required for the prototype
 
 ---
 
@@ -165,13 +176,23 @@ For mobile testing, open the same address from the preview environment or host t
 │   ├── assets/
 │   │   ├── demo-compliant.svg
 │   │   ├── demo-violation.svg
-│   │   └── vendor/qrcode.js      # Local QR generator
+│   │   └── vendor/
+│   │       ├── qrcode.js          # Local QR generator
+│   │       └── jspdf.umd.min.js   # Local PDF generator
 │   ├── README.md
 │   └── serve.sh
+├── docs/
+│   └── ARCHITECTURE.md             # Architecture and deployment framework
 └── presentation/
     ├── metrikAI_SIH2026_Idea_Presentation.pptx
     └── README.md
 ```
+
+---
+
+## Architecture and deployment documentation
+
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the logical architecture, current prototype implementation, visual/font-size validation framework, role model, production security controls and recommended deployment pattern.
 
 ---
 
