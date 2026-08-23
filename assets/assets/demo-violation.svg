@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1160" viewBox="0 0 900 1160" role="img" aria-label="Synthetic sample product label with compliance gaps">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f59e0b"/><stop offset="1" stop-color="#dc2626"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-opacity=".24"/></filter>
+  </defs>
+  <rect width="900" height="1160" rx="58" fill="#f5f1e9"/>
+  <rect x="46" y="46" width="808" height="1068" rx="34" fill="#fffefb" filter="url(#shadow)"/>
+  <rect x="46" y="46" width="808" height="230" rx="34" fill="url(#bg)"/>
+  <text x="100" y="135" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#fff" letter-spacing="4">SPARKLE FRESH</text>
+  <text x="100" y="205" font-family="Arial, sans-serif" font-size="58" font-weight="800" fill="#fff">Orange Dishwash</text>
+  <rect x="100" y="330" width="700" height="3" fill="#e5e7eb"/>
+  <text x="100" y="400" font-family="Arial, sans-serif" font-size="31" font-weight="700" fill="#111827">Orange Dishwash Gel</text>
+  <text x="100" y="461" font-family="Arial, sans-serif" font-size="26" fill="#374151">Manufactured &amp; packed by:</text>
+  <text x="100" y="500" font-family="Arial, sans-serif" font-size="29" font-weight="600" fill="#111827">BrightLeaf Consumer Products</text>
+  <rect x="100" y="538" width="700" height="3" fill="#e5e7eb"/>
+  <text x="100" y="608" font-family="Arial, sans-serif" font-size="31" font-weight="700" fill="#111827">Net Qty: 500 ml</text>
+  <text x="100" y="676" font-family="Arial, sans-serif" font-size="35" font-weight="800" fill="#111827">MRP: ₹159</text>
+  <text x="100" y="725" font-family="Arial, sans-serif" font-size="25" fill="#6b7280">Packed: 07/2026</text>
+  <rect x="100" y="770" width="700" height="3" fill="#e5e7eb"/>
+  <text x="100" y="836" font-family="Arial, sans-serif" font-size="23" fill="#6b7280">Synthetic demo label • no real brand</text>
+  <rect x="100" y="881" width="700" height="144" rx="16" fill="#fff1f2" stroke="#fecdd3" stroke-width="2"/>
+  <text x="130" y="930" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#be123c">Intentional gaps for demo</text>
+  <text x="130" y="971" font-family="Arial, sans-serif" font-size="22" fill="#9f1239">Address • tax-inclusive MRP • consumer care • unit sale price</text>
+</svg>

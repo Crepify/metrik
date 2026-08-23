@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1160" viewBox="0 0 900 1160" role="img" aria-label="Synthetic sample product label with declarations">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#0f766e"/><stop offset="1" stop-color="#2563eb"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-opacity=".18"/></filter>
+  </defs>
+  <rect width="900" height="1160" rx="58" fill="#eff6ff"/>
+  <rect x="46" y="46" width="808" height="1068" rx="34" fill="#fffefb" filter="url(#shadow)"/>
+  <rect x="46" y="46" width="808" height="220" rx="34" fill="url(#bg)"/>
+  <text x="100" y="133" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#d1fae5" letter-spacing="4">AARNA NATURALS</text>
+  <text x="100" y="198" font-family="Arial, sans-serif" font-size="54" font-weight="800" fill="#fff">Turmeric Face Wash</text>
+  <text x="100" y="334" font-family="Arial, sans-serif" font-size="29" font-weight="700" fill="#111827">Common name: Face wash</text>
+  <text x="100" y="392" font-family="Arial, sans-serif" font-size="23" fill="#374151">Manufactured &amp; packed by: Aarna Naturals Pvt. Ltd.</text>
+  <text x="100" y="428" font-family="Arial, sans-serif" font-size="22" fill="#374151">Unit 5, Peenya Industrial Area, Bengaluru - 560058, Karnataka</text>
+  <rect x="100" y="468" width="700" height="3" fill="#e5e7eb"/>
+  <text x="100" y="531" font-family="Arial, sans-serif" font-size="29" font-weight="800" fill="#111827">Net Quantity: 100 g</text>
+  <text x="100" y="584" font-family="Arial, sans-serif" font-size="27" font-weight="800" fill="#111827">MRP: ₹199.00 (incl. of all taxes)</text>
+  <text x="100" y="631" font-family="Arial, sans-serif" font-size="23" fill="#374151">Unit Sale Price: ₹1.99/g</text>
+  <text x="100" y="681" font-family="Arial, sans-serif" font-size="23" fill="#374151">Date of Manufacture: July 2026</text>
+  <rect x="100" y="720" width="700" height="3" fill="#e5e7eb"/>
+  <text x="100" y="773" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#111827">Consumer Care</text>
+  <text x="100" y="811" font-family="Arial, sans-serif" font-size="21" fill="#374151">Aarna Care, Bengaluru - 560058</text>
+  <text x="100" y="847" font-family="Arial, sans-serif" font-size="21" fill="#374151">1800 123 4567  •  care@aarnanaturals.in</text>
+  <rect x="100" y="906" width="700" height="102" rx="16" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="2"/>
+  <text x="130" y="949" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#047857">Synthetic demo label • declaration-rich sample</text>
+  <text x="130" y="986" font-family="Arial, sans-serif" font-size="20" fill="#065f46">Use only to demonstrate the pre-screening workflow.</text>
+</svg>
