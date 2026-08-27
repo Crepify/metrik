@@ -9,6 +9,7 @@ polls the session until the image is available.
 from __future__ import annotations
 
 import json
+import os
 import mimetypes
 import re
 import secrets
@@ -26,7 +27,8 @@ UPLOAD_ROOT = Path(tempfile.gettempdir()) / "metrikai-phone-uploads"
 UPLOAD_ROOT.mkdir(parents=True, exist_ok=True)
 
 HOST = "0.0.0.0"
-PORT = 4173
+PORT = int(os.environ.get('PORT', '4173'))
+OCR_API_URL = os.environ.get('OCR_API_URL', '').rstrip('/')
 SESSION_TTL_SECONDS = 15 * 60
 MAX_UPLOAD_BYTES = 12 * 1024 * 1024
 SESSION_ID_RE = re.compile(r"^[A-Za-z0-9_-]{16,80}$")
@@ -182,7 +184,11 @@ class MetrikAIHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path
         if path == "/api/health":
-            return self.send_json(HTTPStatus.OK, {"ok": True, "service": "metrikAI"})
+            return self.send_json(HTTPStatus.OK, {"ok": True, "service": "metrikAI", "ocr_backend_configured": bool(OCR_API_URL)})
+        if path == "/api/ocr-config":
+            # Exposes only the public OCR service URL configured by the deployer.
+            # No secret/token is stored or returned here.
+            return self.send_json(HTTPStatus.OK, {"api_url": OCR_API_URL})
 
         match = re.fullmatch(r"/api/sessions/([A-Za-z0-9_-]+)", path)
         if match:

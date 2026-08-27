@@ -137,13 +137,48 @@ Package image / Camera / QR phone transfer / Listing text
 ## Technology stack
 
 - **Frontend:** Vanilla HTML, CSS and JavaScript
-- **OCR:** Tesseract.js loaded in-browser when available
+- **Primary OCR integration:** Configurable FastAPI OCR backend deployed on Render
+- **OCR fallback:** Tesseract.js loaded in-browser when the FastAPI backend is not connected
 - **Rule engine:** Transparent regex / rule-profile logic in the browser
 - **Visual audit:** OCR bounding boxes, image resolution and calibrated font-height proxy
 - **Reports:** Local jsPDF PDF export, editable Word-compatible DOC, text, JSON and print view
 - **Repository:** Browser-local searchable inspection history for the prototype
 - **Access view:** Local Inspector / Supervisor / Admin demo mode
-- **Deployment:** `server.py` serves the app plus same-origin, short-lived phone-transfer API; no cloud database is required for the prototype
+- **Deployment:** `server.py` serves the app plus same-origin, short-lived phone-transfer API; Vercel can use `api/ocr-config.js` to expose the public FastAPI base URL configured in `OCR_API_URL`.
+
+---
+
+## FastAPI OCR backend integration
+
+metrikAI now has a configurable **OCR backend** control in the top bar.
+
+1. Click **OCR backend: connect**.
+2. Enter the real Render base URL, for example `https://metrix-1z5z.onrender.com` — **no trailing slash**.
+3. Click **Test /health**. The backend must return a healthy status and Tesseract availability.
+4. Click **Save & use backend**.
+5. Select **Smart: FastAPI if connected** or **FastAPI OCR backend**, upload a real label image, then click **Run OCR**.
+
+The integration sends a `multipart/form-data` request to:
+
+```text
+POST <BACKEND_URL>/ocr
+field name: file
+```
+
+It consumes the backend response for OCR text, word boxes, parsed fields, confidence, compliance hints and the optional `annotated_image`. When supplied, the annotated image is shown directly in the preview with a **View original** toggle.
+
+### Deployment configuration
+
+- **Vercel:** Set `OCR_API_URL` in Project → Settings → Environment Variables, enable Production/Preview/Development, then redeploy. `api/ocr-config.js` exposes the public base URL to the static frontend.
+- **Local server:** set the environment variable before starting `server.py`:
+
+```bash
+OCR_API_URL=https://metrix-1z5z.onrender.com python3 server.py
+```
+
+- **Static-only deployment:** edit `config.js` and set `window.METRIK_OCR_API_URL`.
+
+The app keeps a 120-second timeout for Render cold starts and surfaces backend-reported missing / needs-review fields rather than inventing values. If a browser console reports CORS, the Render backend must allow the deployed frontend origin.
 
 ---
 
