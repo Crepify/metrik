@@ -167,6 +167,10 @@ field name: file
 
 It consumes the backend response for OCR text, word boxes, parsed fields, confidence, compliance hints and the optional `annotated_image`. When supplied, the annotated image is shown directly in the preview with a **View original** toggle.
 
+### Render upload optimization
+
+Before each FastAPI `/ocr` call, metrikAI now automatically resizes the photo to a maximum side of **1200 px** and re-encodes it as a quality-controlled JPEG. The original image remains available as evidence; only the OCR request is optimized. This prevents large PNG or 3–5 MB phone photos from exhausting a low-CPU Render instance. The UI shows the optimized JPEG size in the visual audit.
+
 ### Deployment configuration
 
 - **Vercel:** Set `OCR_API_URL` in Project → Settings → Environment Variables, enable Production/Preview/Development, then redeploy. `api/ocr-config.js` exposes the public base URL to the static frontend.
@@ -178,7 +182,7 @@ OCR_API_URL=https://metrix-1z5z.onrender.com python3 server.py
 
 - **Static-only deployment:** edit `config.js` and set `window.METRIK_OCR_API_URL`.
 
-The app keeps a 120-second timeout for Render cold starts and surfaces backend-reported missing / needs-review fields rather than inventing values. If a browser console reports CORS, the Render backend must allow the deployed frontend origin.
+The app keeps a 120-second timeout for Render cold starts and surfaces backend-reported missing / needs-review fields rather than inventing values. In **Smart** mode it automatically falls back to browser OCR if the FastAPI service is unavailable. If a browser console reports CORS, the Render backend must allow the deployed frontend origin.
 
 ---
 

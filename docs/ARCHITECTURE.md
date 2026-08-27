@@ -52,7 +52,8 @@ The design intentionally separates **automated pre-screening** from **final lega
 | PC-to-phone transfer | Same-origin `server.py` API with random 15-minute transfer sessions |
 | QR generation | Local vendored QR generator; no QR cloud service |
 | Primary OCR | Configurable FastAPI OCR service on Render: `/health` pre-warm followed by `POST /ocr` multipart upload |
-| OCR fallback | Tesseract.js in the browser when a FastAPI endpoint is not configured; extraction text remains editable |
+| Render upload preparation | Client-side canvas downscaling (maximum 1200 px) and JPEG re-encoding before FastAPI OCR, while retaining the original photo as evidence |
+| OCR fallback | Tesseract.js in the browser when a FastAPI endpoint is not configured or Smart-mode FastAPI OCR is unavailable; extraction text remains editable |
 | Backend response use | Consumes text, confidence, word boxes, parsed fields, compliance hints, barcode geometry and optional annotated-image data URI |
 | Visual-quality evidence | Image dimensions, OCR confidence, word bounding boxes and calibrated text-height proxy |
 | Rule checks | Transparent client-side rule functions with individual status and evidence details |
