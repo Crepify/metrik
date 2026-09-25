@@ -1,7 +1,7 @@
 /*
  * metrikAI FastAPI OCR configuration.
  *
- * Default: same-origin Vercel serverless function (api/index.py in this repo)
+ * Default: same-origin Vercel serverless functions (api/health.py + api/ocr.py in this repo)
  *   -> https://metrik-steel.vercel.app/api/health
  *   -> https://metrik-steel.vercel.app/api/ocr
  *
