@@ -1,0 +1,7 @@
+# Vercel serverless function deps (no torch -> fits the 250 MB bundle limit)
+fastapi>=0.110
+python-multipart>=0.0.9
+rapidocr-onnxruntime>=1.3.24
+onnxruntime>=1.17
+opencv-python-headless>=4.9
+numpy>=1.26
