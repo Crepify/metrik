@@ -1,161 +1,138 @@
-# metrikAI — Software Architecture & Deployment Framework
+# metrik — SIH26036 Architecture and Deployment Framework
 
-## 1. Objective
+## 1. Goal
 
-metrikAI is an evidence-led inspection workflow for packaged commodities. It receives a label photo, product image or e-commerce listing; extracts declarations; applies a versioned Legal Metrology rule profile; produces explainable findings; and maintains inspection history for authorised review.
+metrik is an online verification and digital certification platform for weighing and measuring instruments. It supports instrument users, State LMOs, GATCs and State Admins through the lifecycle of application, allocation, field verification, QR certificate issue, validity monitoring and re-verification.
 
-The design intentionally separates **automated pre-screening** from **final legal determination**.
+```text
+Instrument User → Application → Scheduling → LMO/GATC Field Verification
+→ Digital Certificate + QR → Validity Tracking → Expiry Alert → Re-verification
+```
+
+The system digitises workflow and evidence. It does not replace statutory verification by authorised LMOs/GATCs.
 
 ---
 
-## 2. Logical architecture
+## 2. Prototype architecture
 
 ```text
-┌────────────────────────────────────────────────────────────────┐
-│  Capture channels                                               │
-│  PC upload • mobile camera • QR phone transfer • listing text   │
-└──────────────────────────────┬─────────────────────────────────┘
-                               ↓
-┌────────────────────────────────────────────────────────────────┐
-│  Image / OCR / visual-quality layer                             │
-│  OCR text • confidence • bounding boxes • resolution • proxy    │
-│  font-height • declaration-location evidence                    │
-└──────────────────────────────┬─────────────────────────────────┘
-                               ↓
-┌────────────────────────────────────────────────────────────────┐
-│  Declaration extraction layer                                   │
-│  Entity • address • commodity • quantity • MRP • date • care    │
-│  importer • country of origin • listing context                 │
-└──────────────────────────────┬─────────────────────────────────┘
-                               ↓
-┌────────────────────────────────────────────────────────────────┐
-│  Versioned rule engine                                          │
-│  Rule applicability • exceptions • severity • evidence links    │
-│  Rules 3 / 6 / 6(10A) / 6(11) / 7 / 9 / 10 / 11–13 baseline    │
-└──────────────────────────────┬─────────────────────────────────┘
-                               ↓
-┌────────────────────────────────────────────────────────────────┐
-│  Officer workflow                                               │
-│  Pre-screen score • review queue • repository • PDF/DOC/JSON    │
-│  dashboard • audit trail • role-aware access                    │
-└────────────────────────────────────────────────────────────────┘
+[Instrument User Portal] [LMO Workspace] [GATC Workspace] [State Admin Dashboard]
+                 ↓
+[Browser Application]
+  • Instrument photo/document upload
+  • FastAPI OCR / browser OCR fallback
+  • Verification application and field workflow
+  • QR certificate presentation
+  • Local registry and dashboard
+                 ↓
+[FastAPI OCR Service on Render]
+  • /health pre-warm
+  • /ocr multipart extraction
+  • text, bounding boxes, parsed fields, compliance hints, annotated image
+                 ↓
+[Production data layer]
+  PostgreSQL instrument records + applications + certificates + history + alerts
+  Object storage for photographs and documents
 ```
 
 ---
 
-## 3. Prototype implementation
+## 3. Current prototype modules
 
-| Layer | Current prototype implementation |
+| Module | Prototype behaviour |
 |---|---|
-| Desktop UI | Responsive Vanilla HTML/CSS/JavaScript web application |
-| Mobile capture | `capture="environment"` file inputs and a QR-linked mobile uploader |
-| PC-to-phone transfer | Same-origin `server.py` API with random 15-minute transfer sessions |
-| QR generation | Local vendored QR generator; no QR cloud service |
-| Primary OCR | Configurable FastAPI OCR service on Render: `/health` pre-warm followed by `POST /ocr` multipart upload |
-| Render upload preparation | Client-side canvas downscaling (maximum 1200 px) and JPEG re-encoding before FastAPI OCR, while retaining the original photo as evidence |
-| OCR fallback | Tesseract.js in the browser when a FastAPI endpoint is not configured or Smart-mode FastAPI OCR is unavailable; extraction text remains editable |
-| Backend response use | Consumes text, confidence, word boxes, parsed fields, compliance hints, barcode geometry and optional annotated-image data URI |
-| Visual-quality evidence | Image dimensions, OCR confidence, word bounding boxes and calibrated text-height proxy |
-| Rule checks | Transparent client-side rule functions with individual status and evidence details |
-| Repository | Browser-local inspection repository with search, retrieve and delete controls |
-| Reports | PDF, editable Word-compatible DOC, text, print and JSON exports |
-| Access demonstration | Local Inspector / Supervisor / Admin role view |
-
-### Prototype data flow
-
-1. A user captures or uploads an image.
-2. The browser optionally runs OCR and returns text, confidence and word geometry.
-3. The user can correct the text before analysis.
-4. The rule engine evaluates declarations and context.
-5. A pre-screen score, visual audit and rule-linked findings are rendered.
-6. A real user scan is stored in the local repository and can be re-opened/exported.
+| Instrument application | Captures photo, document reference, capacity, manufacturer, model, serial, owner, location and due dates |
+| OCR | FastAPI `/ocr` with browser fallback; maps text to capacity/model/serial/manufacturer fields |
+| Render protection | Client-side image downscale to max 1200px and JPEG quality 0.85 before OCR upload |
+| Queue | Sorts expired/expiring and pending applications for verification scheduling |
+| Allocation | Assigns application to LMO or GATC and records visit date |
+| Field verification | Captures standard/observed value, seal status, condition and digital remarks |
+| Certificate | Issues certificate ID, validity period and QR verification payload |
+| Public verify page | Displays the certificate payload encoded in the QR for prototype demonstration |
+| Registry | Stores local instrument records and verification history |
+| Dashboard | Shows records, pending work, expiry alerts and overdue cases |
 
 ---
 
-## 4. Visual/readability and placement framework
+## 4. Production implementation requirements
 
-A photograph alone does not always provide a legally reliable physical font measurement. metrikAI therefore uses a layered approach:
-
-1. **Image-quality gate** — image dimensions and OCR confidence flag weak captures.
-2. **OCR geometry** — word bounding boxes identify where detected declaration anchors occur.
-3. **Calibrated text-height proxy** — the officer enters label width in millimetres and the current rule-profile threshold; the application estimates text height from image pixels.
-4. **Human physical verification** — the app explicitly routes principal display panel, contrast, lettering, physical font size and package dimensions to authorised review.
-
-This avoids making an unsupported automated enforcement decision from uncalibrated image pixels.
-
----
-
-## 5. Production architecture recommendation
+### Data model
 
 ```text
-Web / Mobile PWA
-      ↓ HTTPS
-API Gateway + Identity Provider (OIDC / SSO / MFA)
-      ↓
-Application services
-├── OCR / Vision service
-├── Rule-profile service
-├── Report generation service
-├── Inspection / repository service
-├── Notification / workflow service
-└── Audit-log service
-      ↓
-Data services
-├── PostgreSQL / government-approved RDBMS
-├── Object storage for original photographs and attachments
-├── Search index for products, reports and entities
-└── Immutable audit archive / SIEM integration
+Stakeholder
+├── Instrument User
+├── LMO
+├── GATC
+└── State Admin
+
+Instrument
+├── type, capacity, manufacturer, model, serial number
+├── installation location and owner
+├── evidence documents
+└── validity status
+
+Verification Application
+├── verification / re-verification request
+├── assigned LMO/GATC
+├── scheduled visit
+├── field observations
+└── result
+
+Certificate
+├── certificate ID
+├── issue / validity dates
+├── QR signature
+└── public verification state
 ```
 
-### Recommended production controls
+### Security controls
 
-- Government-approved identity provider, MFA and single sign-on.
-- Role-based permissions: Inspector, Supervisor, Legal Reviewer, Administrator and Audit-only.
-- Server-side rule-profile versioning with effective dates, exceptions and source references.
-- Encrypted object storage for original evidence photographs.
-- Database retention policy, audit log and chain-of-custody metadata.
-- API rate limiting, malware/image validation and file-size limits.
-- State/department tenancy or access segmentation where required.
-- Offline-first PWA cache for field capture with delayed secure sync.
-- Monitoring, backups, disaster recovery and accessibility testing.
+- Server-side authentication and RBAC
+- State/district scoped access controls
+- Immutable audit log for applications, allocation, observations and certificate edits
+- Server-generated certificate signature or HMAC/Ed25519 verification payload
+- Object-storage access controls for photo/document evidence
+- No client-side secret embedded in QR or frontend code
 
----
+### Validity and alerts
 
-## 6. Role model
-
-| Role | Prototype behaviour | Production authorisation target |
-|---|---|---|
-| Inspector | Capture, edit OCR, analyze, create case, export own case | Create/update inspection, attach evidence, submit for review |
-| Supervisor | Repository and dashboard access | Review/assign cases, approve corrections, monitor teams |
-| Legal Reviewer | Modelled in governance flow | Validate rule applicability and enforcement recommendation |
-| Administrator | Rule-library access in prototype role view | Manage users, rules, retention and integrations |
-| Audit-only | Architecture target | Read-only access to immutable audit trail |
-
-The prototype role selector demonstrates workflow separation only; it is **not a secure authentication system**. Production deployment must use OIDC/SSO, backend authorisation and server-side audit logging.
+- Store instrument-specific validity rules in a versioned policy table
+- Calculate `next_due_date` from authorised verification date and applicable category
+- Send configurable alerts at 30/15/7 days prior to due date
+- Escalate expired certificates to the State Admin dashboard
+- Validate exact validity periods against current Central and State rules before pilot
 
 ---
 
-## 7. Report and evidence outputs
+## 5. Deployment
 
-Each report should contain:
+### Frontend
+- Static/Vercel web deployment
+- `config.js` preconfigured with the Render OCR base URL
+- `api/ocr-config.js` supports Vercel `OCR_API_URL` environment configuration
 
-- Case ID, timestamps, user/role and applicable rule-profile version.
-- Original attachment reference and image metadata.
-- Extracted declarations and OCR confidence.
-- Visual audit measurements and calibration inputs.
-- Rule-linked findings, severity, evidence text and officer notes.
-- Compliance score / triage status.
-- Report export in PDF, editable document format and machine-readable JSON.
+### OCR backend
+- FastAPI service on Render
+- `GET /health` for availability/Tesseract checks
+- `POST /ocr` receives multipart field `file`
+- Browser compresses large uploads before transmission due to low-CPU free-tier constraints
+
+### Recommended production stack
+- FastAPI service(s) with background verification/alert workers
+- PostgreSQL for central registry
+- S3-compatible object storage for evidence
+- Redis/queue for expiry alerts and document jobs
+- Transactional email/SMS provider for reminders
+- Monitoring, backups and log retention
 
 ---
 
-## 8. Current limitations and validation path
+## 6. Pilot plan
 
-The current prototype does not replace commodity-specific law, physical net-quantity testing, legal opinion or final enforcement authority. The recommended validation path is:
-
-1. Create an authorised, consolidated rule matrix.
-2. Collect a representative labelled-image dataset across categories, scripts, materials and lighting conditions.
-3. Calibrate visual/font proxy logic against physical measurement samples.
-4. Pilot with enforcement officers and record false alerts / missed alerts.
-5. Add secure authentication, central repository, audit trail and approved hosting.
-6. Conduct legal, security, accessibility and privacy review before deployment.
+1. Select one State/district and a small instrument category subset.
+2. Configure approved verification checklist and validity policy table.
+3. Import limited instrument registry data.
+4. Conduct LMO/GATC field pilot with digital observations.
+5. Issue QR certificates for pilot instruments.
+6. Measure pendency, allocation time, expiry tracking and QR verification events.
+7. Review legal, security and operational feedback before scale-up.

@@ -1,0 +1,2 @@
+# Run daily at 09:00 Asia/Kolkata after configuring DATABASE_URL and alert provider.
+0 9 * * * cd /app && /usr/local/bin/python scripts/send_expiry_alerts.py >> /var/log/metrik-alerts.log 2>&1
